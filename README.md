@@ -48,7 +48,7 @@ pip install -r requirements.txt
 weights will be downloaded from modelscope
 
 ## Tutorial
-- todo
+- [DEMO](https://www.bilibili.com/video/BV16H4y1w7su)
 - QQ群：852228202
 
 ## Thanks
