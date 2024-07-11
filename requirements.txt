@@ -1,0 +1,27 @@
+conformer
+deepspeed; sys_platform == 'linux'
+diffusers
+grpcio
+grpcio-tools
+hydra-core
+HyperPyYAML
+inflect
+librosa
+lightning
+matplotlib
+modelscope
+networkx
+omegaconf
+onnxruntime-gpu; sys_platform == 'linux'
+onnxruntime; sys_platform == 'darwin' or sys_platform == 'win32'
+openai-whisper
+protobuf
+pydantic
+rich
+soundfile
+tensorboard
+wget
+gdown
+pyarrow
+jieba
+pypinyin

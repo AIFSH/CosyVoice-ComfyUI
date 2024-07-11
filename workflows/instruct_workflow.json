@@ -1,0 +1,196 @@
+{
+  "last_node_id": 15,
+  "last_link_id": 12,
+  "nodes": [
+    {
+      "id": 2,
+      "type": "TextNode",
+      "pos": [
+        77,
+        137
+      ],
+      "size": {
+        "0": 400,
+        "1": 200
+      },
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "TEXT",
+          "type": "TEXT",
+          "links": [
+            5
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "TextNode"
+      },
+      "widgets_values": [
+        "在面对挑战时，他展现了非凡的<strong>勇气</strong>与<strong>智慧</strong>。'"
+      ]
+    },
+    {
+      "id": 9,
+      "type": "CosyVoiceNode",
+      "pos": [
+        553,
+        127
+      ],
+      "size": {
+        "0": 315,
+        "1": 190
+      },
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "tts_text",
+          "type": "TEXT",
+          "link": 5
+        },
+        {
+          "name": "prompt_text",
+          "type": "TEXT",
+          "link": null,
+          "slot_index": 1
+        },
+        {
+          "name": "prompt_wav",
+          "type": "AUDIO",
+          "link": null,
+          "slot_index": 2
+        },
+        {
+          "name": "instruct_text",
+          "type": "TEXT",
+          "link": 12,
+          "slot_index": 3
+        }
+      ],
+      "outputs": [
+        {
+          "name": "AUDIO",
+          "type": "AUDIO",
+          "links": [
+            11
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CosyVoiceNode"
+      },
+      "widgets_values": [
+        "自然语言控制",
+        "中文女",
+        208,
+        "randomize"
+      ]
+    },
+    {
+      "id": 15,
+      "type": "TextNode",
+      "pos": [
+        126,
+        426
+      ],
+      "size": {
+        "0": 400,
+        "1": 200
+      },
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "TEXT",
+          "type": "TEXT",
+          "links": [
+            12
+          ],
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "TextNode"
+      },
+      "widgets_values": [
+        "Theo \\'Crimson\\', is a fiery, passionate rebel leader. Fights with fervor for justice, but struggles with impulsiveness."
+      ]
+    },
+    {
+      "id": 14,
+      "type": "SaveAudio",
+      "pos": [
+        962,
+        166
+      ],
+      "size": {
+        "0": 315,
+        "1": 100
+      },
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 11
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SaveAudio"
+      },
+      "widgets_values": [
+        "audio/ComfyUI",
+        null
+      ]
+    }
+  ],
+  "links": [
+    [
+      5,
+      2,
+      0,
+      9,
+      0,
+      "TEXT"
+    ],
+    [
+      11,
+      9,
+      0,
+      14,
+      0,
+      "AUDIO"
+    ],
+    [
+      12,
+      15,
+      0,
+      9,
+      3,
+      "TEXT"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 1,
+      "offset": [
+        -6.40008544921875,
+        -2.399932861328125
+      ]
+    }
+  },
+  "version": 0.4
+}

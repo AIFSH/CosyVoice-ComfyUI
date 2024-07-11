@@ -1,0 +1,155 @@
+{
+  "last_node_id": 11,
+  "last_link_id": 8,
+  "nodes": [
+    {
+      "id": 3,
+      "type": "PreviewAudio",
+      "pos": [
+        970,
+        118
+      ],
+      "size": {
+        "0": 315,
+        "1": 76
+      },
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 6
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PreviewAudio"
+      },
+      "widgets_values": [
+        null
+      ]
+    },
+    {
+      "id": 2,
+      "type": "TextNode",
+      "pos": [
+        77,
+        137
+      ],
+      "size": {
+        "0": 400,
+        "1": 200
+      },
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "TEXT",
+          "type": "TEXT",
+          "links": [
+            5
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "TextNode"
+      },
+      "widgets_values": [
+        "你好，我是通义生成式语音大模型，请问有什么可以帮您的吗？"
+      ]
+    },
+    {
+      "id": 9,
+      "type": "CosyVoiceNode",
+      "pos": [
+        553,
+        127
+      ],
+      "size": {
+        "0": 315,
+        "1": 190
+      },
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "tts_text",
+          "type": "TEXT",
+          "link": 5
+        },
+        {
+          "name": "prompt_text",
+          "type": "TEXT",
+          "link": null,
+          "slot_index": 1
+        },
+        {
+          "name": "prompt_wav",
+          "type": "AUDIO",
+          "link": null,
+          "slot_index": 2
+        },
+        {
+          "name": "instruct_text",
+          "type": "TEXT",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "AUDIO",
+          "type": "AUDIO",
+          "links": [
+            6
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CosyVoiceNode"
+      },
+      "widgets_values": [
+        "预训练音色",
+        "中文女",
+        1712,
+        "randomize"
+      ]
+    }
+  ],
+  "links": [
+    [
+      5,
+      2,
+      0,
+      9,
+      0,
+      "TEXT"
+    ],
+    [
+      6,
+      9,
+      0,
+      3,
+      0,
+      "AUDIO"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 1,
+      "offset": [
+        -4.800048828125,
+        -0.7999267578125
+      ]
+    }
+  },
+  "version": 0.4
+}
