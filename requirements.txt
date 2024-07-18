@@ -25,3 +25,7 @@ gdown
 pyarrow
 jieba
 pypinyin
+pydub
+audiosegment
+srt
+audiotsm

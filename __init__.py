@@ -1,6 +1,10 @@
-from .nodes import TextNode, CosyVoiceNode
+from .nodes import TextNode, CosyVoiceNode, LoadSRT, CosyVoiceDubbingNode
+
+WEB_DIRECTORY = "./web"
 
 NODE_CLASS_MAPPINGS = {
+    "LoadSRT":LoadSRT,
     "TextNode": TextNode,
-    "CosyVoiceNode": CosyVoiceNode
+    "CosyVoiceNode": CosyVoiceNode,
+    "CosyVoiceDubbingNode":CosyVoiceDubbingNode
 }
