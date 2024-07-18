@@ -1,6 +1,17 @@
 # CosyVoice-ComfyUI
 a comfyui custom node for [CosyVoice](https://github.com/FunAudioLLM/CosyVoice),you can find workflow in [workflows](./workflows/)
 
+## new Feature
+suport `srt` file to single voice or mutiple voice clone
+
+input
+- [tts_srt](./workflows/dubbing/zh_test.srt)
+- [prompt_wav](./workflows/dubbing/test.mp3)
+- [prompt_srt](./workflows/dubbing/en_test.srt)(optional)
+
+output
+
+
 ## Example
 test on 2080ti 11GB torch==2.3.0+cu121 python 3.10.8
 

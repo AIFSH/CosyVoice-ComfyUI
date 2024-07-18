@@ -1,25 +1,25 @@
 {
-  "last_node_id": 16,
+  "last_node_id": 15,
   "last_link_id": 15,
   "nodes": [
     {
-      "id": 15,
-      "type": "TextNode",
+      "id": 13,
+      "type": "LoadAudio",
       "pos": [
-        126,
-        426
+        502,
+        432
       ],
       "size": {
-        "0": 400,
-        "1": 200
+        "0": 315,
+        "1": 124
       },
       "flags": {},
       "order": 0,
       "mode": 0,
       "outputs": [
         {
-          "name": "TEXT",
-          "type": "TEXT",
+          "name": "AUDIO",
+          "type": "AUDIO",
           "links": [
             14
           ],
@@ -27,39 +27,12 @@
         }
       ],
       "properties": {
-        "Node name for S&R": "TextNode"
+        "Node name for S&R": "LoadAudio"
       },
       "widgets_values": [
-        "Theo \\'Crimson\\', is a fiery, passionate rebel leader. Fights with fervor for justice, but struggles with impulsiveness."
-      ]
-    },
-    {
-      "id": 14,
-      "type": "SaveAudio",
-      "pos": [
-        962,
-        166
-      ],
-      "size": {
-        "0": 315,
-        "1": 100
-      },
-      "flags": {},
-      "order": 3,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "audio",
-          "type": "AUDIO",
-          "link": 15
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "SaveAudio"
-      },
-      "widgets_values": [
-        "audio/ComfyUI",
-        null
+        "zero_shot_prompt.wav",
+        null,
+        ""
       ]
     },
     {
@@ -81,6 +54,38 @@
           "name": "TEXT",
           "type": "TEXT",
           "links": [
+            12
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "TextNode"
+      },
+      "widgets_values": [
+        "收到好友从远方寄来的生日礼物，那份意外的惊喜与深深的祝福让我心中充满了甜蜜的快乐，笑容如花儿般绽放。"
+      ]
+    },
+    {
+      "id": 12,
+      "type": "TextNode",
+      "pos": [
+        47,
+        398
+      ],
+      "size": {
+        "0": 400,
+        "1": 200
+      },
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "TEXT",
+          "type": "TEXT",
+          "links": [
             13
           ],
           "shape": 3,
@@ -91,44 +96,44 @@
         "Node name for S&R": "TextNode"
       },
       "widgets_values": [
-        "在面对挑战时，他展现了非凡的<strong>勇气</strong>与<strong>智慧</strong>。'"
+        "希望你以后能够做的比我还好呦。"
       ]
     },
     {
-      "id": 16,
+      "id": 15,
       "type": "CosyVoiceNode",
       "pos": [
-        569,
-        117
+        559,
+        115
       ],
       "size": {
         "0": 315,
         "1": 214
       },
       "flags": {},
-      "order": 2,
+      "order": 3,
       "mode": 0,
       "inputs": [
         {
           "name": "tts_text",
           "type": "TEXT",
-          "link": 13
+          "link": 12
         },
         {
           "name": "prompt_text",
           "type": "TEXT",
-          "link": null
+          "link": 13
         },
         {
           "name": "prompt_wav",
           "type": "AUDIO",
-          "link": null
+          "link": 14,
+          "slot_index": 2
         },
         {
           "name": "instruct_text",
           "type": "TEXT",
-          "link": 14,
-          "slot_index": 3
+          "link": null
         }
       ],
       "outputs": [
@@ -146,34 +151,71 @@
         "Node name for S&R": "CosyVoiceNode"
       },
       "widgets_values": [
-        1,
+        1.5,
         "预训练音色",
         "中文女",
-        368,
+        2002,
         "randomize"
+      ]
+    },
+    {
+      "id": 14,
+      "type": "SaveAudio",
+      "pos": [
+        962.4000854492188,
+        165.59996032714844
+      ],
+      "size": {
+        "0": 315,
+        "1": 100
+      },
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 15
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SaveAudio"
+      },
+      "widgets_values": [
+        "audio/ComfyUI",
+        null
       ]
     }
   ],
   "links": [
     [
-      13,
+      12,
       2,
       0,
-      16,
+      15,
       0,
+      "TEXT"
+    ],
+    [
+      13,
+      12,
+      0,
+      15,
+      1,
       "TEXT"
     ],
     [
       14,
-      15,
+      13,
       0,
-      16,
-      3,
-      "TEXT"
+      15,
+      2,
+      "AUDIO"
     ],
     [
       15,
-      16,
+      15,
       0,
       14,
       0,

@@ -1,6 +1,6 @@
 {
-  "last_node_id": 7,
-  "last_link_id": 7,
+  "last_node_id": 8,
+  "last_link_id": 10,
   "nodes": [
     {
       "id": 2,
@@ -37,57 +37,6 @@
       ]
     },
     {
-      "id": 3,
-      "type": "VocalSeparationNode",
-      "pos": [
-        527,
-        62
-      ],
-      "size": {
-        "0": 315,
-        "1": 126
-      },
-      "flags": {},
-      "order": 2,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "music",
-          "type": "AUDIO",
-          "link": 2
-        }
-      ],
-      "outputs": [
-        {
-          "name": "vocals_AUDIO",
-          "type": "AUDIO",
-          "links": [
-            3,
-            4
-          ],
-          "shape": 3,
-          "slot_index": 0
-        },
-        {
-          "name": "instrumental_AUDIO",
-          "type": "AUDIO",
-          "links": [
-            5
-          ],
-          "shape": 3,
-          "slot_index": 1
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "VocalSeparationNode"
-      },
-      "widgets_values": [
-        "bs_roformer",
-        4,
-        true
-      ]
-    },
-    {
       "id": 4,
       "type": "PreviewAudio",
       "pos": [
@@ -99,7 +48,7 @@
         "1": 76
       },
       "flags": {},
-      "order": 4,
+      "order": 3,
       "mode": 0,
       "inputs": [
         {
@@ -161,7 +110,7 @@
         {
           "name": "audio",
           "type": "AUDIO",
-          "link": 6
+          "link": 10
         }
       ],
       "properties": {
@@ -169,6 +118,57 @@
       },
       "widgets_values": [
         null
+      ]
+    },
+    {
+      "id": 3,
+      "type": "VocalSeparationNode",
+      "pos": [
+        527,
+        62
+      ],
+      "size": {
+        "0": 315,
+        "1": 126
+      },
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "music",
+          "type": "AUDIO",
+          "link": 2
+        }
+      ],
+      "outputs": [
+        {
+          "name": "vocals_AUDIO",
+          "type": "AUDIO",
+          "links": [
+            4,
+            8
+          ],
+          "shape": 3,
+          "slot_index": 0
+        },
+        {
+          "name": "instrumental_AUDIO",
+          "type": "AUDIO",
+          "links": [
+            5
+          ],
+          "shape": 3,
+          "slot_index": 1
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VocalSeparationNode"
+      },
+      "widgets_values": [
+        "bs_roformer",
+        4,
+        true
       ]
     },
     {
@@ -190,9 +190,10 @@
           "name": "SRT",
           "type": "SRT",
           "links": [
-            7
+            9
           ],
-          "shape": 3
+          "shape": 3,
+          "slot_index": 0
         }
       ],
       "properties": {
@@ -204,31 +205,29 @@
       ]
     },
     {
-      "id": 1,
+      "id": 8,
       "type": "CosyVoiceDubbingNode",
       "pos": [
-        550,
-        374
+        532,
+        365
       ],
       "size": {
         "0": 315,
-        "1": 146
+        "1": 170
       },
       "flags": {},
-      "order": 3,
+      "order": 4,
       "mode": 0,
       "inputs": [
         {
           "name": "tts_srt",
           "type": "SRT",
-          "link": 7,
-          "slot_index": 0
+          "link": 9
         },
         {
           "name": "prompt_wav",
           "type": "AUDIO",
-          "link": 3,
-          "slot_index": 1
+          "link": 8
         },
         {
           "name": "prompt_srt",
@@ -241,7 +240,7 @@
           "name": "AUDIO",
           "type": "AUDIO",
           "links": [
-            6
+            10
           ],
           "shape": 3,
           "slot_index": 0
@@ -252,6 +251,7 @@
       },
       "widgets_values": [
         "<|zh|>",
+        true,
         42,
         "randomize"
       ]
@@ -267,14 +267,6 @@
       "AUDIO"
     ],
     [
-      3,
-      3,
-      0,
-      1,
-      1,
-      "AUDIO"
-    ],
-    [
       4,
       3,
       0,
@@ -291,20 +283,28 @@
       "AUDIO"
     ],
     [
-      6,
+      8,
+      3,
+      0,
+      8,
       1,
-      0,
-      6,
-      0,
       "AUDIO"
     ],
     [
-      7,
+      9,
       7,
       0,
-      1,
+      8,
       0,
       "SRT"
+    ],
+    [
+      10,
+      8,
+      0,
+      6,
+      0,
+      "AUDIO"
     ]
   ],
   "groups": [],

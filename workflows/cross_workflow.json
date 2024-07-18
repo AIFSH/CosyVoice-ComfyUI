@@ -1,36 +1,67 @@
 {
-  "last_node_id": 14,
-  "last_link_id": 11,
+  "last_node_id": 15,
+  "last_link_id": 14,
   "nodes": [
     {
-      "id": 12,
-      "type": "TextNode",
+      "id": 13,
+      "type": "LoadAudio",
       "pos": [
-        47,
-        398
+        188,
+        422
       ],
       "size": {
-        "0": 400,
-        "1": 200
+        "0": 315,
+        "1": 124
       },
       "flags": {},
       "order": 0,
       "mode": 0,
       "outputs": [
         {
-          "name": "TEXT",
-          "type": "TEXT",
+          "name": "AUDIO",
+          "type": "AUDIO",
           "links": [
-            9
+            13
           ],
           "shape": 3
         }
       ],
       "properties": {
-        "Node name for S&R": "TextNode"
+        "Node name for S&R": "LoadAudio"
       },
       "widgets_values": [
-        "希望你以后能够做的比我还好呦。"
+        "cross_lingual_prompt.wav",
+        null,
+        ""
+      ]
+    },
+    {
+      "id": 14,
+      "type": "SaveAudio",
+      "pos": [
+        962,
+        166
+      ],
+      "size": {
+        "0": 315,
+        "1": 100
+      },
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 14
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SaveAudio"
+      },
+      "widgets_values": [
+        "audio/ComfyUI",
+        null
       ]
     },
     {
@@ -52,7 +83,7 @@
           "name": "TEXT",
           "type": "TEXT",
           "links": [
-            5
+            12
           ],
           "shape": 3,
           "slot_index": 0
@@ -62,39 +93,38 @@
         "Node name for S&R": "TextNode"
       },
       "widgets_values": [
-        "收到好友从远方寄来的生日礼物，那份意外的惊喜与深深的祝福让我心中充满了甜蜜的快乐，笑容如花儿般绽放。"
+        "<|en|>And then later on, fully acquiring that company. So keeping management in line, interest in line with the asset that\\'s coming into the family is a reason why sometimes we don\\'t buy the whole thing."
       ]
     },
     {
-      "id": 9,
+      "id": 15,
       "type": "CosyVoiceNode",
       "pos": [
-        553,
-        127
+        568,
+        105
       ],
       "size": {
         "0": 315,
-        "1": 190
+        "1": 214
       },
       "flags": {},
-      "order": 3,
+      "order": 2,
       "mode": 0,
       "inputs": [
         {
           "name": "tts_text",
           "type": "TEXT",
-          "link": 5
+          "link": 12
         },
         {
           "name": "prompt_text",
           "type": "TEXT",
-          "link": 9,
-          "slot_index": 1
+          "link": null
         },
         {
           "name": "prompt_wav",
           "type": "AUDIO",
-          "link": 10,
+          "link": 13,
           "slot_index": 2
         },
         {
@@ -108,7 +138,7 @@
           "name": "AUDIO",
           "type": "AUDIO",
           "links": [
-            11
+            14
           ],
           "shape": 3,
           "slot_index": 0
@@ -118,103 +148,34 @@
         "Node name for S&R": "CosyVoiceNode"
       },
       "widgets_values": [
-        "3s极速复刻",
+        1,
+        "预训练音色",
         "中文女",
-        1873,
+        42,
         "randomize"
-      ]
-    },
-    {
-      "id": 13,
-      "type": "LoadAudio",
-      "pos": [
-        502,
-        432
-      ],
-      "size": {
-        "0": 315,
-        "1": 124
-      },
-      "flags": {},
-      "order": 2,
-      "mode": 0,
-      "outputs": [
-        {
-          "name": "AUDIO",
-          "type": "AUDIO",
-          "links": [
-            10
-          ],
-          "shape": 3
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "LoadAudio"
-      },
-      "widgets_values": [
-        "zero_shot_prompt.wav",
-        null,
-        ""
-      ]
-    },
-    {
-      "id": 14,
-      "type": "SaveAudio",
-      "pos": [
-        962.4000854492188,
-        165.59996032714844
-      ],
-      "size": {
-        "0": 315,
-        "1": 100
-      },
-      "flags": {},
-      "order": 4,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "audio",
-          "type": "AUDIO",
-          "link": 11
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "SaveAudio"
-      },
-      "widgets_values": [
-        "audio/ComfyUI",
-        null
       ]
     }
   ],
   "links": [
     [
-      5,
+      12,
       2,
       0,
-      9,
+      15,
       0,
       "TEXT"
     ],
     [
-      9,
-      12,
-      0,
-      9,
-      1,
-      "TEXT"
-    ],
-    [
-      10,
+      13,
       13,
       0,
-      9,
+      15,
       2,
       "AUDIO"
     ],
     [
-      11,
-      9,
+      14,
+      15,
       0,
       14,
       0,

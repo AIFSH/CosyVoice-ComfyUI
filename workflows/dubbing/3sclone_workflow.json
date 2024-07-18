@@ -1,6 +1,6 @@
 {
-  "last_node_id": 8,
-  "last_link_id": 8,
+  "last_node_id": 9,
+  "last_link_id": 11,
   "nodes": [
     {
       "id": 2,
@@ -37,89 +37,6 @@
       ]
     },
     {
-      "id": 3,
-      "type": "VocalSeparationNode",
-      "pos": [
-        527,
-        62
-      ],
-      "size": {
-        "0": 315,
-        "1": 126
-      },
-      "flags": {},
-      "order": 3,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "music",
-          "type": "AUDIO",
-          "link": 2
-        }
-      ],
-      "outputs": [
-        {
-          "name": "vocals_AUDIO",
-          "type": "AUDIO",
-          "links": [
-            3,
-            4
-          ],
-          "shape": 3,
-          "slot_index": 0
-        },
-        {
-          "name": "instrumental_AUDIO",
-          "type": "AUDIO",
-          "links": [
-            5
-          ],
-          "shape": 3,
-          "slot_index": 1
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "VocalSeparationNode"
-      },
-      "widgets_values": [
-        "bs_roformer",
-        4,
-        true
-      ]
-    },
-    {
-      "id": 7,
-      "type": "LoadSRT",
-      "pos": [
-        70,
-        133
-      ],
-      "size": {
-        "0": 315,
-        "1": 82
-      },
-      "flags": {},
-      "order": 1,
-      "mode": 0,
-      "outputs": [
-        {
-          "name": "SRT",
-          "type": "SRT",
-          "links": [
-            7
-          ],
-          "shape": 3
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "LoadSRT"
-      },
-      "widgets_values": [
-        "zh_test.srt",
-        "Audio"
-      ]
-    },
-    {
       "id": 4,
       "type": "PreviewAudio",
       "pos": [
@@ -131,7 +48,7 @@
         "1": 76
       },
       "flags": {},
-      "order": 5,
+      "order": 4,
       "mode": 0,
       "inputs": [
         {
@@ -193,7 +110,7 @@
         {
           "name": "audio",
           "type": "AUDIO",
-          "link": 6
+          "link": 10
         }
       ],
       "properties": {
@@ -204,36 +121,118 @@
       ]
     },
     {
-      "id": 1,
-      "type": "CosyVoiceDubbingNode",
+      "id": 3,
+      "type": "VocalSeparationNode",
       "pos": [
-        550,
-        374
+        527,
+        62
       ],
       "size": {
         "0": 315,
-        "1": 146
+        "1": 126
       },
       "flags": {},
-      "order": 4,
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "music",
+          "type": "AUDIO",
+          "link": 2
+        }
+      ],
+      "outputs": [
+        {
+          "name": "vocals_AUDIO",
+          "type": "AUDIO",
+          "links": [
+            4,
+            8
+          ],
+          "shape": 3,
+          "slot_index": 0
+        },
+        {
+          "name": "instrumental_AUDIO",
+          "type": "AUDIO",
+          "links": [
+            5
+          ],
+          "shape": 3,
+          "slot_index": 1
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VocalSeparationNode"
+      },
+      "widgets_values": [
+        "bs_roformer",
+        4,
+        true
+      ]
+    },
+    {
+      "id": 7,
+      "type": "LoadSRT",
+      "pos": [
+        70,
+        133
+      ],
+      "size": {
+        "0": 315,
+        "1": 82
+      },
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "SRT",
+          "type": "SRT",
+          "links": [
+            9
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadSRT"
+      },
+      "widgets_values": [
+        "zh_test.srt",
+        "Audio"
+      ]
+    },
+    {
+      "id": 8,
+      "type": "CosyVoiceDubbingNode",
+      "pos": [
+        532,
+        365
+      ],
+      "size": {
+        "0": 315,
+        "1": 170
+      },
+      "flags": {},
+      "order": 5,
       "mode": 0,
       "inputs": [
         {
           "name": "tts_srt",
           "type": "SRT",
-          "link": 7,
-          "slot_index": 0
+          "link": 9
         },
         {
           "name": "prompt_wav",
           "type": "AUDIO",
-          "link": 3,
-          "slot_index": 1
+          "link": 8
         },
         {
           "name": "prompt_srt",
           "type": "SRT",
-          "link": 8,
+          "link": 11,
           "slot_index": 2
         }
       ],
@@ -242,7 +241,7 @@
           "name": "AUDIO",
           "type": "AUDIO",
           "links": [
-            6
+            10
           ],
           "shape": 3,
           "slot_index": 0
@@ -253,16 +252,17 @@
       },
       "widgets_values": [
         "<|zh|>",
-        1085,
+        true,
+        42,
         "randomize"
       ]
     },
     {
-      "id": 8,
+      "id": 9,
       "type": "LoadSRT",
       "pos": [
-        118,
-        535
+        115,
+        549
       ],
       "size": {
         "0": 315,
@@ -276,7 +276,7 @@
           "name": "SRT",
           "type": "SRT",
           "links": [
-            8
+            11
           ],
           "shape": 3
         }
@@ -285,7 +285,7 @@
         "Node name for S&R": "LoadSRT"
       },
       "widgets_values": [
-        "zh_test.srt",
+        "en_test.srt",
         "Audio"
       ]
     }
@@ -300,14 +300,6 @@
       "AUDIO"
     ],
     [
-      3,
-      3,
-      0,
-      1,
-      1,
-      "AUDIO"
-    ],
-    [
       4,
       3,
       0,
@@ -324,26 +316,34 @@
       "AUDIO"
     ],
     [
-      6,
+      8,
+      3,
+      0,
+      8,
       1,
-      0,
-      6,
-      0,
       "AUDIO"
     ],
     [
-      7,
+      9,
       7,
       0,
-      1,
+      8,
       0,
       "SRT"
     ],
     [
-      8,
+      10,
       8,
       0,
-      1,
+      6,
+      0,
+      "AUDIO"
+    ],
+    [
+      11,
+      9,
+      0,
+      8,
       2,
       "SRT"
     ]
