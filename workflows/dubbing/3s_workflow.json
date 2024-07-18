@@ -1,0 +1,363 @@
+{
+  "last_node_id": 8,
+  "last_link_id": 8,
+  "nodes": [
+    {
+      "id": 2,
+      "type": "LoadAudio",
+      "pos": [
+        103,
+        348
+      ],
+      "size": {
+        "0": 315,
+        "1": 124
+      },
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "AUDIO",
+          "type": "AUDIO",
+          "links": [
+            2
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadAudio"
+      },
+      "widgets_values": [
+        "test.mp3",
+        null,
+        ""
+      ]
+    },
+    {
+      "id": 3,
+      "type": "VocalSeparationNode",
+      "pos": [
+        527,
+        62
+      ],
+      "size": {
+        "0": 315,
+        "1": 126
+      },
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "music",
+          "type": "AUDIO",
+          "link": 2
+        }
+      ],
+      "outputs": [
+        {
+          "name": "vocals_AUDIO",
+          "type": "AUDIO",
+          "links": [
+            3,
+            4
+          ],
+          "shape": 3,
+          "slot_index": 0
+        },
+        {
+          "name": "instrumental_AUDIO",
+          "type": "AUDIO",
+          "links": [
+            5
+          ],
+          "shape": 3,
+          "slot_index": 1
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VocalSeparationNode"
+      },
+      "widgets_values": [
+        "bs_roformer",
+        4,
+        true
+      ]
+    },
+    {
+      "id": 7,
+      "type": "LoadSRT",
+      "pos": [
+        70,
+        133
+      ],
+      "size": {
+        "0": 315,
+        "1": 82
+      },
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "SRT",
+          "type": "SRT",
+          "links": [
+            7
+          ],
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadSRT"
+      },
+      "widgets_values": [
+        "zh_test.srt",
+        "Audio"
+      ]
+    },
+    {
+      "id": 4,
+      "type": "PreviewAudio",
+      "pos": [
+        962,
+        44
+      ],
+      "size": {
+        "0": 315,
+        "1": 76
+      },
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 4
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PreviewAudio"
+      },
+      "widgets_values": [
+        null
+      ]
+    },
+    {
+      "id": 5,
+      "type": "PreviewAudio",
+      "pos": [
+        966,
+        176
+      ],
+      "size": {
+        "0": 315,
+        "1": 76
+      },
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 5
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PreviewAudio"
+      },
+      "widgets_values": [
+        null
+      ]
+    },
+    {
+      "id": 6,
+      "type": "PreviewAudio",
+      "pos": [
+        978,
+        337
+      ],
+      "size": {
+        "0": 315,
+        "1": 76
+      },
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 6
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PreviewAudio"
+      },
+      "widgets_values": [
+        null
+      ]
+    },
+    {
+      "id": 1,
+      "type": "CosyVoiceDubbingNode",
+      "pos": [
+        550,
+        374
+      ],
+      "size": {
+        "0": 315,
+        "1": 146
+      },
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "tts_srt",
+          "type": "SRT",
+          "link": 7,
+          "slot_index": 0
+        },
+        {
+          "name": "prompt_wav",
+          "type": "AUDIO",
+          "link": 3,
+          "slot_index": 1
+        },
+        {
+          "name": "prompt_srt",
+          "type": "SRT",
+          "link": 8,
+          "slot_index": 2
+        }
+      ],
+      "outputs": [
+        {
+          "name": "AUDIO",
+          "type": "AUDIO",
+          "links": [
+            6
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CosyVoiceDubbingNode"
+      },
+      "widgets_values": [
+        "<|zh|>",
+        1085,
+        "randomize"
+      ]
+    },
+    {
+      "id": 8,
+      "type": "LoadSRT",
+      "pos": [
+        118,
+        535
+      ],
+      "size": {
+        "0": 315,
+        "1": 82
+      },
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "SRT",
+          "type": "SRT",
+          "links": [
+            8
+          ],
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadSRT"
+      },
+      "widgets_values": [
+        "zh_test.srt",
+        "Audio"
+      ]
+    }
+  ],
+  "links": [
+    [
+      2,
+      2,
+      0,
+      3,
+      0,
+      "AUDIO"
+    ],
+    [
+      3,
+      3,
+      0,
+      1,
+      1,
+      "AUDIO"
+    ],
+    [
+      4,
+      3,
+      0,
+      4,
+      0,
+      "AUDIO"
+    ],
+    [
+      5,
+      3,
+      1,
+      5,
+      0,
+      "AUDIO"
+    ],
+    [
+      6,
+      1,
+      0,
+      6,
+      0,
+      "AUDIO"
+    ],
+    [
+      7,
+      7,
+      0,
+      1,
+      0,
+      "SRT"
+    ],
+    [
+      8,
+      8,
+      0,
+      1,
+      2,
+      "SRT"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 1,
+      "offset": [
+        0,
+        0
+      ]
+    }
+  },
+  "version": 0.4
+}

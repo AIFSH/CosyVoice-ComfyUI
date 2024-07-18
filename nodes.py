@@ -14,10 +14,11 @@ pretrained_models = os.path.join(now_dir,"pretrained_models")
 
 from modelscope import snapshot_download
 
-import audiotsm
 import audiosegment
 from srt import parse as SrtPare
 from audiosegment import AudioSegment
+import audiotsm
+from audiotsm.io.wav import WavReader, WavWriter
 
 from cosyvoice.cli.cosyvoice import CosyVoice
 
@@ -151,12 +152,15 @@ class CosyVoiceDubbingNode:
         return {
             "required":{
                 "tts_srt":("SRT",),
-                "language":(["<|zh|>","<|en|>","<|jp|>","<|yue|>","<|ko|>"]),
                 "prompt_wav": ("AUDIO",),
+                "language":(["<|zh|>","<|en|>","<|jp|>","<|yue|>","<|ko|>"],),
                 "seed":("INT",{
                     "default": 42
                 })
             },
+            "optional":{
+                "prompt_srt":("SRT",),
+            }
         }
     RETURN_TYPES = ("AUDIO",)
     #RETURN_NAMES = ("image_output_name",)
@@ -167,9 +171,10 @@ class CosyVoiceDubbingNode:
 
     CATEGORY = "AIFSH_CosyVoice"
 
-    def generate(self,tts_srt,language,prompt_wav,seed):
+    def generate(self,tts_srt,prompt_wav,language,seed,prompt_srt=None):
         model_dir = os.path.join(pretrained_models,"CosyVoice-300M")
         snapshot_download(model_id="iic/CosyVoice-300M",local_dir=model_dir)
+        set_all_random_seed(seed)
         if self.cosyvoice is None:
             self.cosyvoice = CosyVoice(model_dir)
         
@@ -177,17 +182,21 @@ class CosyVoiceDubbingNode:
             text_file_content = file.read()
         text_subtitles = list(SrtPare(text_file_content))
 
+        if prompt_srt:
+            with open(prompt_srt, 'r', encoding="utf-8") as file:
+                prompt_file_content = file.read()
+            prompt_subtitles = list(SrtPare(prompt_file_content))
+
         waveform = prompt_wav['waveform'].squeeze(0)
         source_sr = prompt_wav['sample_rate']
         speech = waveform.mean(dim=0,keepdim=True)
         if source_sr != prompt_sr:
             speech = torchaudio.transforms.Resample(orig_freq=source_sr, new_freq=prompt_sr)(speech)
-        print(speech.shape)
-        speech_numpy = speech.transpose(1,0).numpy()
-        print(speech_numpy.shape)
+        speech_numpy = speech.squeeze(0).numpy() * 32768
+        speech_numpy = speech_numpy.astype(np.int16)
         audio_seg = audiosegment.from_numpy_array(speech_numpy,prompt_sr)
-        
-        new_audio_seg = AudioSegment.silent(0)
+        # audio_seg.export(os.path.join(output_dir,"test.mp3"),format="mp3")
+        new_audio_seg = audiosegment.silent(0,target_sr)
         for i,text_sub in enumerate(text_subtitles):
             start_time = text_sub.start.total_seconds() * 1000
             end_time = text_sub.end.total_seconds() * 1000
@@ -195,15 +204,23 @@ class CosyVoiceDubbingNode:
                 new_audio_seg += audio_seg[:start_time]
                 
             curr_tts_text = language + text_sub.content
+            
             prompt_wav_seg = audio_seg[start_time:end_time]
-            prompt_wav_seg_numpy = prompt_wav_seg.to_numpy_array()
-            print(prompt_wav_seg_numpy.shape)
-            prompt_speech_16k = postprocess(prompt_wav_seg_numpy)
-            set_all_random_seed(seed)
-            curr_output = self.cosyvoice.inference_cross_lingual(curr_tts_text, prompt_speech_16k)
-            curr_output_numpy = curr_output['tts_speech'].squeeze(0).numpy()
-
-            text_audio = audiosegment.from_numpy_array(curr_output_numpy)
+            # prompt_wav_seg.export(os.path.join(output_dir,f"{i}_prompt.wav"),format="wav")
+            prompt_wav_seg_numpy = prompt_wav_seg.to_numpy_array() / 32768
+            # print(prompt_wav_seg_numpy.shape)
+            prompt_speech_16k = postprocess(torch.Tensor(prompt_wav_seg_numpy).unsqueeze(0))
+            if prompt_srt:
+                prompt_text = prompt_subtitles[i].content
+                curr_output = self.cosyvoice.inference_zero_shot(curr_tts_text,prompt_text,prompt_speech_16k)
+            else:
+                curr_output = self.cosyvoice.inference_cross_lingual(curr_tts_text, prompt_speech_16k)
+            
+            curr_output_numpy = curr_output['tts_speech'].squeeze(0).numpy() * 32768
+            # print(curr_output_numpy.shape)
+            curr_output_numpy = curr_output_numpy.astype(np.int16)
+            text_audio = audiosegment.from_numpy_array(curr_output_numpy,target_sr)
+            # text_audio.export(os.path.join(output_dir,f"{i}_res.wav"),format="wav")
             text_audio_dur_time = text_audio.duration_seconds * 1000
 
             if i < len(text_subtitles) - 1:
@@ -216,30 +233,29 @@ class CosyVoiceDubbingNode:
             ratio = text_audio_dur_time / dur_time
 
             if text_audio_dur_time > dur_time:
-                tmp_audio = self.map_vocal(text_audio,ratio,dur_time,f"{i}_refer.wav")
-                tmp_audio += AudioSegment.silent(dur_time - tmp_audio.duration_seconds*1000)
+                tmp_audio = self.map_vocal(text_audio,ratio,dur_time,f"{i}_res.wav")
+                tmp_audio += audiosegment.silent(dur_time - tmp_audio.duration_seconds*1000,target_sr)
             else:
-                tmp_audio = text_audio + AudioSegment.silent(dur_time - text_audio_dur_time)
+                tmp_audio = text_audio + audiosegment.silent(dur_time - text_audio_dur_time,target_sr)
           
             new_audio_seg += tmp_audio
-        output_numpy = new_audio_seg.to_numpy_array()
-        print(output_numpy.shpe)
-        audio = {"waveform": [torch.Tensor(output_numpy)],"sample_rate":target_sr}
+        output_numpy = new_audio_seg.to_numpy_array() / 32768
+        # print(output_numpy.shape)
+        audio = {"waveform": [torch.Tensor(output_numpy).unsqueeze(0)],"sample_rate":target_sr}
         return (audio,)
     
     def map_vocal(self,audio,ratio,dur_time,wav_name):
         os.makedirs(output_dir, exist_ok=True)
-        tmp_path = f"{output_dir}/map_{wav_name}"
+        tmp_path = f"{output_dir}/{wav_name}"
         audio.export(tmp_path, format="wav")
         
-        clone_path = f"{output_dir}/cloned_{wav_name}"
-        reader = audiotsm.io.wav.WavReader(tmp_path)
+        clone_path = f"{output_dir}/speed_{wav_name}"
         
-        writer = audiotsm.io.wav.WavWriter(clone_path,channels=reader.channels,
-                                        samplerate=reader.samplerate)
-        wsloa = audiotsm.phasevocoder(channels=reader.channels,speed=ratio)
-        wsloa.run(reader=reader,writer=writer)
-        audio_extended = AudioSegment.from_file(clone_path)
+        with WavReader(tmp_path) as reader:
+            with WavWriter(clone_path, reader.channels, reader.samplerate) as writer:
+                tsm = audiotsm.phasevocoder(reader.channels, speed=ratio)
+                tsm.run(reader, writer)
+        audio_extended = audiosegment.from_file(clone_path)
         return audio_extended[:dur_time]
 
 class LoadSRT:
