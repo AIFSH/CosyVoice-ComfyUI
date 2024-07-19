@@ -170,7 +170,7 @@ class CosyVoiceNode:
         output_numpy = output['tts_speech'].squeeze(0).numpy() * 32768 
         output_numpy = output_numpy.astype(np.int16)
         output_numpy = speed_change(output_numpy,speed,target_sr)
-        audio = {"waveform": [torch.Tensor(output_numpy/32768).unsqueeze(0)],"sample_rate":target_sr}
+        audio = {"waveform": torch.stack([torch.Tensor(output_numpy/32768).unsqueeze(0)]),"sample_rate":target_sr}
         return (audio,)
 
 class CosyVoiceDubbingNode:
@@ -318,7 +318,7 @@ class CosyVoiceDubbingNode:
 
         output_numpy = new_audio_seg.to_numpy_array() / 32768
         # print(output_numpy.shape)
-        audio = {"waveform": [torch.Tensor(output_numpy).unsqueeze(0)],"sample_rate":target_sr}
+        audio = {"waveform": torch.stack([torch.Tensor(output_numpy).unsqueeze(0)]),"sample_rate":target_sr}
         return (audio,)
 
     
