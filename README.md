@@ -50,6 +50,17 @@ instruct
 https://github.com/AIFSH/CosyVoice-ComfyUI/assets/149982694/646ff534-fd50-4c63-ad7e-9402c1457993
 
 ## How to use
+test on py3.10，2080ti 11gb，torch==2.3.0+cu121
+
+make sure `ffmpeg` is worked in your commandline
+for Linux
+```
+apt update
+apt install ffmpeg
+```
+for Windows,you can install `ffmpeg` by [WingetUI](https://github.com/marticliment/WingetUI) automatically
+
+then!
 ```
 ## in ComfyUI/custom_nodes
 git clone https://github.com/AIFSH/CosyVoice-ComfyUI.git
