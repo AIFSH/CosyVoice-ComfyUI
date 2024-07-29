@@ -131,7 +131,7 @@ class CosyVoiceNode:
                 assert len(prompt_text) > 0, "prompt文本为空，您是否忘记输入prompt文本？"
         if inference_mode == "预训练音色":
             model_dir = os.path.join(pretrained_models,"CosyVoice-300M-SFT")
-            snapshot_download(model_id="iic/CosyVoice-300M-Instruct",local_dir=model_dir)
+            snapshot_download(model_id="iic/CosyVoice-300M-SFT",local_dir=model_dir)
 
 
         if self.model_dir != model_dir:
