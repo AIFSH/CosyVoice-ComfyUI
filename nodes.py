@@ -79,7 +79,7 @@ class TextNode:
     def encode(self,text):
         return (text, )
 
-
+from time import time as ttime
 class CosyVoiceNode:
     def __init__(self):
         self.model_dir = None
@@ -119,6 +119,7 @@ class CosyVoiceNode:
 
     def generate(self,tts_text,speed,inference_mode,sft_dropdown,seed,
                  prompt_text=None,prompt_wav=None,instruct_text=None):
+        t0 = ttime()
         if inference_mode == '自然语言控制':
             model_dir = os.path.join(pretrained_models,"CosyVoice-300M-Instruct")
             snapshot_download(model_id="iic/CosyVoice-300M-Instruct",local_dir=model_dir)
@@ -166,10 +167,13 @@ class CosyVoiceNode:
             set_all_random_seed(seed)
             print(self.model_dir)
             output = self.cosyvoice.inference_instruct(tts_text, sft_dropdown, instruct_text)
-        
-        output_numpy = output['tts_speech'].squeeze(0).numpy() * 32768 
-        output_numpy = output_numpy.astype(np.int16)
-        output_numpy = speed_change(output_numpy,speed,target_sr)
+        for out_dict in output:
+            output_numpy = out_dict['tts_speech'].squeeze(0).numpy() * 32768 
+            output_numpy = output_numpy.astype(np.int16)
+            if speed > 1.0 or speed < 1.0:
+                output_numpy = speed_change(output_numpy,speed,target_sr)
+        t1 = ttime()
+        print("cost time \t %.3f" % (t1-t0))
         audio = {"waveform": torch.stack([torch.Tensor(output_numpy/32768).unsqueeze(0)]),"sample_rate":target_sr}
         return (audio,)
 

@@ -20,21 +20,58 @@ from typing import Callable
 import torchaudio.compliance.kaldi as kaldi
 import torchaudio
 import os
+import re
 import inflect
-'''
-try:
-    import ttsfrd
-    use_ttsfrd = True
-except ImportError:
-    print("failed to import ttsfrd, use WeTextProcessing instead")
-    from tn.chinese.normalizer import Normalizer as ZhNormalizer
-    from tn.english.normalizer import Normalizer as EnNormalizer
-    use_ttsfrd = False
-'''
 from cosyvoice.utils.frontend_utils import contains_chinese, replace_blank, replace_corner_mark, remove_bracket, spell_out_number, split_paragraph
 
-import re
-import jieba.posseg as pseg
+splits = {"，", "。", "？", "！", ",", ".", "?", "!", "~", ":", "：", "—", "…", }
+
+
+def get_first(text):
+    pattern = "[" + "".join(re.escape(sep) for sep in splits) + "]"
+    text = re.split(pattern, text)[0].strip()
+    return text
+def split(todo_text):
+    todo_text = todo_text.replace("……", "。").replace("——", "，")
+    if todo_text[-1] not in splits:
+        todo_text += "。"
+    i_split_head = i_split_tail = 0
+    len_text = len(todo_text)
+    todo_texts = []
+    while 1:
+        if i_split_head >= len_text:
+            break  # 结尾一定有标点，所以直接跳出即可，最后一段在上次已加入
+        if todo_text[i_split_head] in splits:
+            i_split_head += 1
+            todo_texts.append(todo_text[i_split_tail:i_split_head])
+            i_split_tail = i_split_head
+        else:
+            i_split_head += 1
+    return todo_texts
+
+def cut5(inp):
+    inp = inp.strip("\n")
+    inps = split(inp)
+    if len(inps) < 2:
+        return inp
+    opts = []
+    summ = 0
+    tmp_str = ""
+    for i in range(len(inps)):
+        summ += len(inps[i])
+        tmp_str += inps[i]
+        if summ > 10:
+            summ = 0
+            opts.append(tmp_str)
+            tmp_str = ""
+    if tmp_str != "":
+        opts.append(tmp_str)
+    # print(opts)
+    if len(opts) > 1 and len(opts[-1]) < 50:  ##如果最后一个太短了，和前一个合一起
+        opts[-2] = opts[-2] + opts[-1]
+        opts = opts[:-1]
+    return opts
+
 def text_normalize(text):
     """
     对文本进行归一化处理
@@ -55,7 +92,6 @@ def text_normalize(text):
 
     return _txt
 
-
 def remove_chinese_punctuation(text):
     """
     移除文本中的中文标点符号 [：；！（），【】『』「」《》－‘“’”:,;!\(\)\[\]><\-] 替换为 ，
@@ -71,7 +107,7 @@ def remove_chinese_punctuation(text):
     return text
 
 def normalize_zh(text):
-    # <|zh|><|en|><|jp|><|yue|><|ko|>
+     # <|zh|><|en|><|jp|><|yue|><|ko|>
     if text.startswith("<|yue|>"):
         n_text = process_ddd(text_normalize(remove_chinese_punctuation(text[7:])))
         return "<|yue|>" + n_text
@@ -110,6 +146,7 @@ def process_ddd(text):
 
     return ''.join(processed_words)
 
+
 class CosyVoiceFrontEnd:
 
     def __init__(self,
@@ -133,19 +170,7 @@ class CosyVoiceFrontEnd:
         self.instruct = instruct
         self.allowed_special = allowed_special
         self.inflect_parser = inflect.engine()
-        '''
-        self.use_ttsfrd = use_ttsfrd
-        if self.use_ttsfrd:
-            self.frd = ttsfrd.TtsFrontendEngine()
-            ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
-            assert self.frd.initialize('{}/../../pretrained_models/CosyVoice-ttsfrd/resource'.format(ROOT_DIR)) is True, 'failed to initialize ttsfrd resource'
-            self.frd.set_lang_type('pinyin')
-            self.frd.enable_pinyin_mix(True)
-            self.frd.set_breakmodel_index(1)
-        else:
-            self.zh_tn_model = ZhNormalizer(remove_erhua=False, full_to_half=False)
-            self.en_tn_model = EnNormalizer()
-        '''
+        
 
     def _extract_text_token(self, text):
         text_token = self.tokenizer.encode(text, allowed_special=self.allowed_special)
@@ -177,18 +202,60 @@ class CosyVoiceFrontEnd:
         speech_feat_len = torch.tensor([speech_feat.shape[1]], dtype=torch.int32).to(self.device)
         return speech_feat, speech_feat_len
 
-    def text_normalize(self, text, split=True):
+    def text_normalize(self, text, split=True,token_max_n=30,token_min_n=20,merge_len=15):
         text = text.strip()
         if contains_chinese(text):
-            '''
-            if self.use_ttsfrd:
-                text = self.frd.get_frd_extra_info(text, 'input')
-            else:
-                text = self.zh_tn_model.normalize(text)
-            '''
+            # text = self.frd.get_frd_extra_info(text, 'input').replace("\n", "")
             text += '.。'
             text = text.replace("\n", "")
             text = normalize_zh(text)
+            text = replace_blank(text)
+            text = replace_corner_mark(text)
+            text = text.replace(".", "、")
+            text = text.replace(" - ", "，")
+            text = remove_bracket(text)
+            texts = [i for i in split_paragraph(text, partial(self.tokenizer.encode, allowed_special=self.allowed_special), "zh", token_max_n=token_max_n,token_min_n=token_min_n, merge_len=merge_len,comma_split=True)]
+        else:
+            text += '.'
+            text = spell_out_number(text, self.inflect_parser)
+            texts = [i for i in split_paragraph(text, partial(self.tokenizer.encode, allowed_special=self.allowed_special), "en", token_max_n=token_max_n,token_min_n=token_min_n, merge_len=merge_len,comma_split=True)]
+        if split is False:
+            return text
+        # texts = cut5(text)
+        return texts
+
+    def text_normalize_stream(self, text, split=True):
+        text = text.strip()
+        if contains_chinese(text):
+            # text = self.frd.get_frd_extra_info(text, 'input').replace("\n", "")
+            text += '.。'
+            text = text.replace("\n", "")
+            text = normalize_zh(text)
+            text = replace_blank(text)
+            text = replace_corner_mark(text)
+            text = text.replace(".", "、")
+            text = text.replace(" - ", "，")
+            text = remove_bracket(text)
+            texts = [i for i in split_paragraph(text, partial(self.tokenizer.encode, allowed_special=self.allowed_special), "zh", token_max_n=30,
+                                                token_min_n=20, merge_len=15,
+                                                comma_split=True)]
+        else:
+            text += '.'
+            text = spell_out_number(text, self.inflect_parser)
+            texts = [i for i in split_paragraph(text, partial(self.tokenizer.encode, allowed_special=self.allowed_special), "en", token_max_n=30,
+                                                token_min_n=20, merge_len=15,
+                                                comma_split=True)]
+        if split is False:
+            return text
+        return texts
+
+    def text_normalize_instruct(self, text, split=True):
+        text = text.strip()
+        if contains_chinese(text):
+            # text = self.frd.get_frd_extra_info(text, 'input').replace("\n", "")
+            text += '.。'
+            text = text.replace("\n", "")
+            # text = normalize_zh(text)
             text = replace_blank(text)
             text = replace_corner_mark(text)
             text = text.replace(".", "、")
@@ -198,12 +265,6 @@ class CosyVoiceFrontEnd:
                                                 token_min_n=60, merge_len=20,
                                                 comma_split=False)]
         else:
-            '''
-            if self.use_ttsfrd:
-                text = self.frd.get_frd_extra_info(text, 'input')
-            else:
-                text = self.en_tn_model.normalize(text)
-            '''
             text += '.'
             text = spell_out_number(text, self.inflect_parser)
             texts = [i for i in split_paragraph(text, partial(self.tokenizer.encode, allowed_special=self.allowed_special), "en", token_max_n=80,
@@ -211,7 +272,6 @@ class CosyVoiceFrontEnd:
                                                 comma_split=False)]
         if split is False:
             return text
-        print(texts)
         return texts
 
     def frontend_sft(self, tts_text, spk_id):
