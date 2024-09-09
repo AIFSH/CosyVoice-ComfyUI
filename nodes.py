@@ -167,7 +167,7 @@ class CosyVoiceNode:
             set_all_random_seed(seed)
             print(self.model_dir)
             output = self.cosyvoice.inference_instruct(tts_text, sft_dropdown, instruct_text)
-        output_list = ［］
+        output_list =［］
         for out_dict in output:
             output_numpy = out_dict['tts_speech'].squeeze(0).numpy() * 32768 
             output_numpy = output_numpy.astype(np.int16)
