@@ -43,15 +43,3 @@ weights will be downloaded from modelscope
 
 ## Tutorial
 - [DEMO](https://www.bilibili.com/video/BV16H4y1w7su)
-
-## ask for answer as soon as you want
-wechat: aifsh_98
-need donate if you mand it,
-but please feel free to new issue for answering
-
-Windows环境配置太难？可以添加微信：aifsh_98，赞赏获取Windows一键包，当然你也可以提issue等待大佬为你答疑解惑。
-
-## Thanks
-
-- [CosyVoice](https://github.com/FunAudioLLM/CosyVoice)
-- [CosyVoice_For_Windows](https://github.com/v3ucn/CosyVoice_For_Windows)
