@@ -167,7 +167,7 @@ class CosyVoiceNode:
             set_all_random_seed(seed)
             print(self.model_dir)
             output = self.cosyvoice.inference_instruct(tts_text, sft_dropdown, instruct_text)
-        output_list =［］
+        output_list = []
         for out_dict in output:
             output_numpy = out_dict['tts_speech'].squeeze(0).numpy() * 32768 
             output_numpy = output_numpy.astype(np.int16)
@@ -176,7 +176,7 @@ class CosyVoiceNode:
             output_list.append(torch.Tensor(output_numpy/32768).unsqueeze(0))
         t1 = ttime()
         print("cost time \t %.3f" % (t1-t0))
-        audio = {"waveform": torch.stack(output_list),"sample_rate":target_sr}
+        audio = {"waveform": torch.cat(.unsqueeze(0),dim=1).unsqueeze(0),"sample_rate":target_sr}
         return (audio,)
 
 class CosyVoiceDubbingNode:
