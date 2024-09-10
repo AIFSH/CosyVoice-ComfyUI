@@ -176,7 +176,7 @@ class CosyVoiceNode:
             output_list.append(torch.Tensor(output_numpy/32768).unsqueeze(0))
         t1 = ttime()
         print("cost time \t %.3f" % (t1-t0))
-        audio = {"waveform": torch.stack(output_list),"sample_rate":target_sr}
+        audio = {"waveform": torch.cat(output_list,dim=1).unsqueeze(0),"sample_rate":target_sr}
         return (audio,)
 
 class CosyVoiceDubbingNode:
