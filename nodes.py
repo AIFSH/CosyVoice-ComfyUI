@@ -6,6 +6,7 @@ import torchaudio
 import numpy as np
 import os,sys
 import folder_paths
+import pkg_resources
 now_dir = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(now_dir)
 input_dir = folder_paths.get_input_directory()
@@ -27,6 +28,13 @@ def set_all_random_seed(seed):
     np.random.seed(seed)
     torch.manual_seed(seed)
     torch.cuda.manual_seed_all(seed)
+ 
+def is_package_installed(package_name):
+    try:
+        pkg_resources.get_distribution(package_name)
+        return True
+    except pkg_resources.DistributionNotFound:
+        return False
 
 max_val = 0.8
 prompt_sr, target_sr = 16000, 22050
@@ -120,6 +128,10 @@ class CosyVoiceNode:
     def generate(self,tts_text,speed,inference_mode,sft_dropdown,seed,
                  prompt_text=None,prompt_wav=None,instruct_text=None):
         t0 = ttime()
+        # 如果存在名为ttsfrd的pip包，则下载CosyVoice-ttsfrd模型
+        if is_package_installed("ttsfrd"):
+            model_dir = os.path.join(pretrained_models,"CosyVoice-ttsfrd")
+            snapshot_download(model_id="iic/CosyVoice-ttsfrd",local_dir=model_dir)
         if inference_mode == '自然语言控制':
             model_dir = os.path.join(pretrained_models,"CosyVoice-300M-Instruct")
             snapshot_download(model_id="iic/CosyVoice-300M-Instruct",local_dir=model_dir)
