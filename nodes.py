@@ -141,10 +141,12 @@ class CosyVoiceNode:
             assert instruct_text is not None, "in 自然语言控制 mode, instruct_text can't be none"
         if inference_mode in ["跨语种复刻",'3s极速复刻']:
             model_name = "CosyVoice-300M"
+            model_id = "iic/CosyVoice-300M"
             if use_25hz:
                 model_name = "CosyVoice-300M-25Hz"
+                model_id = "iic/CosyVoice-300M-25Hz"
             model_dir = os.path.join(pretrained_models,model_name)
-            snapshot_download(model_id="iic/CosyVoice-300M",local_dir=model_dir)
+            snapshot_download(model_id=model_id,local_dir=model_dir)
             assert prompt_wav is not None, "in 跨语种复刻 or 3s极速复刻 mode, prompt_wav can't be none"
             if inference_mode == "3s极速复刻":
                 assert len(prompt_text) > 0, "prompt文本为空，您是否忘记输入prompt文本？"
@@ -228,9 +230,14 @@ class CosyVoiceDubbingNode:
 
     CATEGORY = "AIFSH_CosyVoice"
 
-    def generate(self,tts_srt,prompt_wav,language,if_single,seed,prompt_srt=None):
-        model_dir = os.path.join(pretrained_models,"CosyVoice-300M")
-        snapshot_download(model_id="iic/CosyVoice-300M",local_dir=model_dir)
+    def generate(self,tts_srt,prompt_wav,language,if_single,seed,prompt_srt=None,use_25hz=False):
+        model_name = "CosyVoice-300M"
+        model_id = "iic/CosyVoice-300M"
+        if use_25hz:
+            model_name = "CosyVoice-300M-25Hz"
+            model_id = "iic/CosyVoice-300M-25Hz"
+        model_dir = os.path.join(pretrained_models,model_name)
+        snapshot_download(model_id=model_id,local_dir=model_dir)
         set_all_random_seed(seed)
         if self.cosyvoice is None:
             self.cosyvoice = CosyVoice(model_dir)
