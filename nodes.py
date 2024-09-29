@@ -151,8 +151,13 @@ class CosyVoiceNode:
             if inference_mode == "3s极速复刻":
                 assert len(prompt_text) > 0, "prompt文本为空，您是否忘记输入prompt文本？"
         if inference_mode == "预训练音色":
-            model_dir = os.path.join(pretrained_models,"CosyVoice-300M-SFT")
-            snapshot_download(model_id="iic/CosyVoice-300M-SFT",local_dir=model_dir)
+            model_name = "CosyVoice-300M-SFT"
+            model_id = "iic/CosyVoice-300M-SFT"
+            if use_25hz:
+                model_name = "CosyVoice-300M-SFT-25Hz"
+                model_id = "MachineS/CosyVoice-300M-SFT-25Hz"
+            model_dir = os.path.join(pretrained_models,model_name)
+            snapshot_download(model_id=model_id,local_dir=model_dir)
 
 
         if self.model_dir != model_dir:
