@@ -108,7 +108,10 @@ class CosyVoiceNode:
                 }),
                 "seed":("INT",{
                     "default": 42
-                })
+                }),
+                "use_25hz":("BOOLEAN",{
+                    "default": False
+                }),
             },
             "optional":{
                 "prompt_text":("TEXT",),
@@ -125,7 +128,7 @@ class CosyVoiceNode:
 
     CATEGORY = "AIFSH_CosyVoice"
 
-    def generate(self,tts_text,speed,inference_mode,sft_dropdown,seed,
+    def generate(self,tts_text,speed,inference_mode,sft_dropdown,use_25hz,seed,
                  prompt_text=None,prompt_wav=None,instruct_text=None):
         t0 = ttime()
         # 如果存在名为ttsfrd的pip包，则下载CosyVoice-ttsfrd模型
@@ -137,7 +140,10 @@ class CosyVoiceNode:
             snapshot_download(model_id="iic/CosyVoice-300M-Instruct",local_dir=model_dir)
             assert instruct_text is not None, "in 自然语言控制 mode, instruct_text can't be none"
         if inference_mode in ["跨语种复刻",'3s极速复刻']:
-            model_dir = os.path.join(pretrained_models,"CosyVoice-300M")
+            model_name = "CosyVoice-300M"
+            if use_25hz:
+                model_name = "CosyVoice-300M-25Hz"
+            model_dir = os.path.join(pretrained_models,model_name)
             snapshot_download(model_id="iic/CosyVoice-300M",local_dir=model_dir)
             assert prompt_wav is not None, "in 跨语种复刻 or 3s极速复刻 mode, prompt_wav can't be none"
             if inference_mode == "3s极速复刻":
@@ -167,24 +173,24 @@ class CosyVoiceNode:
             print(self.model_dir)
             prompt_speech_16k = postprocess(speech)
             set_all_random_seed(seed)
-            output = self.cosyvoice.inference_zero_shot(tts_text, prompt_text, prompt_speech_16k)
+            output = self.cosyvoice.inference_zero_shot(tts_text, prompt_text, prompt_speech_16k,False,speed)
         elif inference_mode == '跨语种复刻':
             print('get cross_lingual inference request')
             print(self.model_dir)
             prompt_speech_16k = postprocess(speech)
             set_all_random_seed(seed)
-            output = self.cosyvoice.inference_cross_lingual(tts_text, prompt_speech_16k)
+            output = self.cosyvoice.inference_cross_lingual(tts_text, prompt_speech_16k,False,speed)
         else:
             print('get instruct inference request')
             set_all_random_seed(seed)
             print(self.model_dir)
-            output = self.cosyvoice.inference_instruct(tts_text, sft_dropdown, instruct_text)
+            output = self.cosyvoice.inference_instruct(tts_text, sft_dropdown, instruct_text,False,speed)
         output_list = []
         for out_dict in output:
             output_numpy = out_dict['tts_speech'].squeeze(0).numpy() * 32768 
             output_numpy = output_numpy.astype(np.int16)
-            if speed > 1.0 or speed < 1.0:
-                output_numpy = speed_change(output_numpy,speed,target_sr)
+            # if speed > 1.0 or speed < 1.0:
+            #     output_numpy = speed_change(output_numpy,speed,target_sr)
             output_list.append(torch.Tensor(output_numpy/32768).unsqueeze(0))
         t1 = ttime()
         print("cost time \t %.3f" % (t1-t0))
