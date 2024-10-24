@@ -1,46 +1,87 @@
 {
-  "last_node_id": 15,
-  "last_link_id": 15,
+  "last_node_id": 16,
+  "last_link_id": 16,
   "nodes": [
     {
-      "id": 13,
-      "type": "LoadAudio",
+      "id": 16,
+      "type": "PreviewAudio",
       "pos": [
-        502,
-        432
+        1058.8413450785058,
+        128.8060195862438
       ],
       "size": {
-        "0": 315,
-        "1": 124
+        "0": 210,
+        "1": 26
+      },
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 16
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PreviewAudio"
+      },
+      "widgets_values": [
+        {
+          "hidden": false,
+          "paused": false,
+          "params": {}
+        },
+        {
+          "hidden": false,
+          "paused": false,
+          "params": {}
+        },
+        {
+          "hidden": false,
+          "paused": false,
+          "params": {}
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "type": "TextNode",
+      "pos": [
+        4,
+        355
+      ],
+      "size": {
+        "0": 400,
+        "1": 200
       },
       "flags": {},
       "order": 0,
       "mode": 0,
       "outputs": [
         {
-          "name": "AUDIO",
-          "type": "AUDIO",
+          "name": "TEXT",
+          "type": "TEXT",
           "links": [
-            14
+            13
           ],
-          "shape": 3
+          "shape": 3,
+          "slot_index": 0
         }
       ],
       "properties": {
-        "Node name for S&R": "LoadAudio"
+        "Node name for S&R": "TextNode"
       },
       "widgets_values": [
-        "zero_shot_prompt.wav",
-        null,
-        ""
+        "希望你以后能够做的比我还好呦。"
       ]
     },
     {
       "id": 2,
       "type": "TextNode",
       "pos": [
-        77,
-        137
+        7,
+        88
       ],
       "size": {
         "0": 400,
@@ -68,35 +109,40 @@
       ]
     },
     {
-      "id": 12,
-      "type": "TextNode",
+      "id": 13,
+      "type": "LoadAudio",
       "pos": [
-        47,
-        398
+        57,
+        624
       ],
       "size": {
-        "0": 400,
-        "1": 200
+        "0": 315,
+        "1": 124
       },
       "flags": {},
       "order": 2,
       "mode": 0,
       "outputs": [
         {
-          "name": "TEXT",
-          "type": "TEXT",
+          "name": "AUDIO",
+          "type": "AUDIO",
           "links": [
-            13
+            14
           ],
-          "shape": 3,
-          "slot_index": 0
+          "shape": 3
         }
       ],
       "properties": {
-        "Node name for S&R": "TextNode"
+        "Node name for S&R": "LoadAudio"
       },
       "widgets_values": [
-        "希望你以后能够做的比我还好呦。"
+        "zero_shot_prompt.wav",
+        null,
+        {
+          "hidden": false,
+          "paused": false,
+          "params": {}
+        }
       ]
     },
     {
@@ -141,7 +187,7 @@
           "name": "AUDIO",
           "type": "AUDIO",
           "links": [
-            15
+            16
           ],
           "shape": 3,
           "slot_index": 0
@@ -152,39 +198,10 @@
       },
       "widgets_values": [
         1.5,
-        "预训练音色",
+        "3s极速复刻",
         "中文女",
-        2002,
+        287,
         "randomize"
-      ]
-    },
-    {
-      "id": 14,
-      "type": "SaveAudio",
-      "pos": [
-        962.4000854492188,
-        165.59996032714844
-      ],
-      "size": {
-        "0": 315,
-        "1": 100
-      },
-      "flags": {},
-      "order": 4,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "audio",
-          "type": "AUDIO",
-          "link": 15
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "SaveAudio"
-      },
-      "widgets_values": [
-        "audio/ComfyUI",
-        null
       ]
     }
   ],
@@ -214,10 +231,10 @@
       "AUDIO"
     ],
     [
-      15,
+      16,
       15,
       0,
-      14,
+      16,
       0,
       "AUDIO"
     ]
@@ -226,12 +243,13 @@
   "config": {},
   "extra": {
     "ds": {
-      "scale": 1,
+      "scale": 0.658845000000001,
       "offset": [
-        -6.40008544921875,
-        -2.399932861328125
+        562.9107542034455,
+        102.88957051799386
       ]
-    }
+    },
+    "groupNodes": {}
   },
   "version": 0.4
 }

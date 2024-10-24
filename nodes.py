@@ -6,12 +6,13 @@ import torchaudio
 import numpy as np
 import os,sys
 import folder_paths
+
 now_dir = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(now_dir)
 input_dir = folder_paths.get_input_directory()
 output_dir = os.path.join(folder_paths.get_output_directory(),"cosyvoice_dubb")
-pretrained_models = os.path.join(now_dir,"pretrained_models")
-
+#pretrained_models = os.path.join(now_dir,"pretrained_models")
+pretrained_models = os.path.join(folder_paths.models_dir, "CosyVoice")
 from modelscope import snapshot_download
 
 import ffmpeg
@@ -344,3 +345,45 @@ class LoadSRT:
     def load_srt(self, srt):
         srt_path = folder_paths.get_annotated_filepath(srt)
         return (srt_path,)
+
+class LoadAudio:
+    @classmethod
+    def INPUT_TYPES(s):
+        files = [f for f in os.listdir(input_dir) if os.path.isfile(os.path.join(input_dir, f)) and f.split('.')[-1] in ["wav", "mp3","WAV","flac","m4a"]]
+        return {"required":
+                    {"audio": (sorted(files),)},
+                }
+    CATEGORY = "AIFSH_CosyVoice"
+    RETURN_TYPES = ("AUDIO",)
+    FUNCTION = "load_audio"
+    def load_audio(self, audio):
+        audio_path = folder_paths.get_annotated_filepath(audio)
+        #读取文件
+        waveform, sample_rate = torchaudio.load(audio_path)
+        audio = {"waveform": waveform.unsqueeze(0),"sample_rate":sample_rate}
+        return (audio,)
+
+class PreviewAudio:
+    def __init__(self):
+        self.preview_count = 00000
+    @classmethod
+    def INPUT_TYPES(s):
+        return {"required":
+                    {"audio": ("AUDIO",),}
+                }
+    CATEGORY = "AIFSH_CosyVoice"
+    RETURN_TYPES = ()
+    OUTPUT_NODE = True
+    FUNCTION = "preview_audio"
+    def preview_audio(self, audio):
+        #保存文件
+        filename = "audio_out_"+ f"{self.preview_count:05}"+".wav"
+        self.preview_count += 1
+        audioname = os.path.join(folder_paths.get_output_directory(),filename)
+        torchaudio.save(audioname,audio["waveform"].squeeze(0),audio["sample_rate"])
+        #torchaudio.save(os.path.join(full_output_folder, file), waveform, audio["sample_rate"], format="FLAC")
+        #
+        audio_name = os.path.basename(audioname)
+        tmp_path = os.path.dirname(audioname)
+        audio_root = os.path.basename(tmp_path)
+        return {"ui": {"audio":[audio_name,audio_root]}}
